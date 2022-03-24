@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+
+    <style>
+        .details{
+            margin: 20px;
+        }
+    </style>
+    <script>
+
+        $(document).ready(function () {
+            let getLink = window.location.search;
+            let id = decodeURI(getLink.split('?')[1])
+            // HTML 문서를 로드할 때마다 실행합니다.
+            getBoards(id);
+        })
+
+        // 게시글을 불러와서 보여줍니다.
+        function getBoards(id) {
+            // 2. 메모 목록을 불러와서 HTML로 붙입니다.
+            $.ajax({
+                type: 'GET',
+                url: `/api/boards/detail/${id}`,
+                success: function (response) {
+                    let detail = response;
+                    let id = detail.id;
+                    let title = detail.title;
+                    let username = detail.username;
+                    let contents = detail.contents;
+                    let modifiedAt = detail.modifiedAt;
+                    addHTML(id, title, username, contents, modifiedAt);
+                }
+            })
+        }
+
+        function addHTML(id, title, username, contents, modifiedAt) {
+            // 1. HTML 태그를 만듭니다.
+            let tempHtml = `
+                <h2>${id}번째 게시물</h2>
+                <br>
+                작성자: <h2>${username}</h2>
+                <br>
+                제목: <h2>${title}</h2>
+                <br>
+                내용: <h2>${contents}</h2>
+                <br>
+                작성날짜: <h2>${modifiedAt}</h2>
+            `;
+            // 2. #cards-box 에 HTML을 붙인다.
+            $('#detail-view').append(tempHtml);
+        }
+    </script>
+</head>
+<body>
+<div class="details" id="detail-view">
+
+</div>
+
+
+</body>
+</html>

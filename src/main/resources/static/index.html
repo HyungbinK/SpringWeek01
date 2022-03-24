@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>홈페이지</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            // HTML 문서를 로드할 때마다 실행
+            getMessages();
+        })
+
+        // 메세지를 불러와서 보여주기
+        function getMessages() {
+            // 1. 기존 내용을 지우기
+            $('#cards-box').empty();
+            // 2. 메세지 목록을 불러와서 HTML로 붙이기
+            $.ajax({
+                type: 'GET',
+                url: '/api/boards',
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+                        let message = response[i];
+                        let id = message.id;
+                        let username = message.username;
+                        let title = message.title;
+                        let modifiedAt = message.modifiedAt;
+                        addHTML(id, username, title, modifiedAt);
+                    }
+                }
+            })
+        }
+
+        // 메세지 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙이기
+        function addHTML(id, username, title, modifiedAt) {
+            // 1. HTML 태그를 만듭니다.
+            let tempHtml = `
+                <tr>
+                <th>${id}</th>
+                <td>${username}</td>
+                <td style="cursor:pointer;color:#blue;" onclick="location.href='detail.html?${id}'">${title}</td>
+                <td>${modifiedAt}</td>
+            </tr>
+
+            `;
+            // 2. #cards-box에 Html 붙이기
+            $('#cards-box').append(tempHtml);
+        }
+    </script>
+</head>
+
+<body>
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>NO</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>날짜</th>
+        </tr>
+        </thead>
+        <tbody id="cards-box">
+        <tr>
+            <th>1</th>
+            <td>james</td>
+            <td>java</td>
+            <td>22.03.21</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div>
+    <button onclick="window.location.href='post.html'">글쓰기</button>
+</div>
+</body>
+</html>
