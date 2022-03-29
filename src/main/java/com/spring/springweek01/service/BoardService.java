@@ -1,8 +1,8 @@
 package com.spring.springweek01.service;
 
-import com.spring.springweek01.domain.Board;
-import com.spring.springweek01.domain.BoardRepository;
-import com.spring.springweek01.domain.BoardRequestDto;
+import com.spring.springweek01.model.Board;
+import com.spring.springweek01.repository.BoardRepository;
+import com.spring.springweek01.dto.BoardRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

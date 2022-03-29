@@ -1,5 +1,6 @@
-package com.spring.springweek01.domain;
+package com.spring.springweek01.repository;
 
+import com.spring.springweek01.model.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

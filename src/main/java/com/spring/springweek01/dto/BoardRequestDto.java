@@ -1,4 +1,4 @@
-package com.spring.springweek01.domain;
+package com.spring.springweek01.dto;
 
 import lombok.Getter;
 import lombok.Setter;

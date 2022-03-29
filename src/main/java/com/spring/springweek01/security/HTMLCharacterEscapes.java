@@ -1,4 +1,4 @@
-package com.spring.springweek01.domain;
+package com.spring.springweek01.security;
 
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
