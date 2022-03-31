@@ -22,12 +22,12 @@ public class Board extends TimeStamped {
     @Column(nullable = false)
     private String contents;
 
-//
-//    public Board(String username, String title, String contents) {
-//        this.username = username;
-//        this.title = title;
-//        this.contents = contents;
-//    }
+
+    public Board(String username, String title, String contents) {
+        this.username = username;
+        this.title = title;
+        this.contents = contents;
+    }
 
     public Board(BoardRequestDto requestDto) {
         this.username = requestDto.getUsername();

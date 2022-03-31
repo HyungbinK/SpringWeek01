@@ -6,19 +6,27 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
     <style>
-        .details{
+        .details {
+            margin: 20px;
+        }
+
+        .comments {
             margin: 20px;
         }
     </style>
     <script>
 
         $(document).ready(function () {
-            let getLink = window.location.search;
-            let id = decodeURI(getLink.split('?')[1])
+            let id = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
             // HTML 문서를 로드할 때마다 실행합니다.
             getBoards(id);
+            // getComment();
         })
+
 
         // 게시글을 불러와서 보여줍니다.
         function getBoards(id) {
@@ -54,13 +62,121 @@
             // 2. #cards-box 에 HTML을 붙인다.
             $('#detail-view').append(tempHtml);
         }
+
+        //댓글 생성
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content"); $(document).ajaxSend(function(e, xhr, options) { xhr.setRequestHeader(header, token); });
+        function writeComment() {
+
+            // if (usernames == 'anonymousUser'){
+            //     alert("로그인이 필요합니다!")
+            //     window.location.assign('/user/login')
+            // } else {
+            //작성한 메모를 불러옵니다.
+            let comment = $('#comment').val();
+            //작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+            // if (isValidComments(comment) == false) {
+            //     return;
+            // }
+            //전달할 data JSON으로 만듭니다.
+            let data = {'comment': comment};
+            console.log(comment);
+            //POST /api/articles 에 data를 전달합니다.
+            $.ajax({
+                type: "POST",
+                url: "/api/boards/{id}/comments",
+                contentType: "application/json", // JSON 형식으로 전달함을 알리기
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('댓글이 성공적으로 작성되었습니다.');
+                    window.location.reload();
+                }
+            });
+        }
+
+//         /////////댓글 전체 불러오기//////////////
+//         function getComment() {
+//             let id = [[${id}]];
+//             $.ajax({
+//                 type: 'GET',
+//                 url: `/boards/${id}/comments`,
+//                 success: function (response) {
+//                     console.log(response)
+//                     for (let i = 0; i < response.length; i++) {
+//                         let comments = response[i];
+//                         let comment = comments.comment;
+//                         let username = comments.username;
+//                         let modifiedAt = comments.modifiedAt;
+//                         let commentId = comments.id;
+//                         console.log(comment, username, modifiedAt)
+//                         commentAddHTML(comment, username, modifiedAt, commentId);
+//                     }
+//                 }
+//             })
+//         }
+//
+//         function commentAddHTML(comment, username, modifiedAt, commentId) {
+//             let tempHtml = makeComments(comment, username, modifiedAt, commentId);
+//             $('#cards-box').append(tempHtml);
+//         }
+//
+//
+//         function makeComments(comment, username, modifiedAt, commentId) {
+//             // console.log(usernames)
+//             // let hide = "hide"
+//             // console.log(username)
+//             // if (usernames === username) {
+//             //     hide = ""
+//             // }
+//             return `<div class="box comment-box">
+//   <article class="media">
+//     <div class="media-content">
+//       <div class="content">
+//         <p>
+//           <strong class="comment-name">${username}</strong><p class="comment-modi">${modifiedAt}</p>
+//           <br>
+//         <p id="${commentId}-comment">${comment}</p>
+//         </p>
+//         <textarea class="textarea comment-text" id="${commentId}-textarea" placeholder="e.g. Hello world"></textarea>
+//       </div>
+//       <nav class="level is-mobile">
+//         <div class="level-left btn-box">
+//           <a class="level-item ${hide}" aria-label="reply">
+//             <i class="fas fa-edit" id="${commentId}-edit" onclick="editComment(${commentId})"></i>
+//           </a>
+//           <a class="level-item ${hide}" id="${commentId}-delete" aria-label="retweet" onclick="deleteComment(${commentId})">
+//             <i class="fas fa-trash-alt"></i>
+//           </a>
+//           <a class="level-item check " id="${commentId}-check" aria-label="check">
+//             <i class="fas fa-lg fa-check-square" onclick="submitEdit(${commentId})"></i>
+//           </a>
+//         </div>
+//       </nav>
+//     </div>
+//   </article>
+// </div>`;
+//             // $('#cards-box').append(tempHtml);
+//         }
+
+
     </script>
 </head>
+
 <body>
 <div class="details" id="detail-view">
 
 </div>
 
+<div class="comments">
+    <h1>댓글</h1>
+    <input id="comment" class="input" type="text" placeholder="댓글을 입력하세요">
+
+    <div>
+        <button onclick="writeComment()">등록하기</button>
+    </div>
+
+</div>
 
 </body>
+
 </html>
